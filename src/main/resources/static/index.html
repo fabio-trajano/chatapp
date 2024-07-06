@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>WebSocket Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<div id="chat-page">
+    <div id="message-area"></div>
+    <input type="text" id="message-input" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+        var stompClient = null;
+        var username = prompt('Please enter your name:');
+
+        function connect() {
+            var socket = new SockJS('/chat');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, onConnected, onError);
+        }
+
+        function onConnected() {
+            stompClient.subscribe('/topic/public', onMessageReceived);
+            stompClient.send("/app/chat.addUser",
+                {},
+                JSON.stringify({sender: username, content: username + ' joined'})
+            )
+        }
+
+        function onError(error) {
+            console.log('Could not connect to WebSocket server. Please refresh this page to try again!');
+        }
+
+        function sendMessage() {
+            var messageContent = document.getElementById('message-input').value.trim();
+            if(messageContent && stompClient) {
+                var chatMessage = {
+                    sender: username,
+                    content: messageContent
+                };
+                stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+                document.getElementById('message-input').value = '';
+            }
+        }
+
+        function onMessageReceived(payload) {
+            var message = JSON.parse(payload.body);
+            var messageElement = document.createElement('div');
+            messageElement.textContent = message.sender + ': ' + message.content;
+            document.getElementById('message-area').appendChild(messageElement);
+        }
+
+        connect();
+    </script>
+</body>
+</html>
