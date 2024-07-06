@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.1'
 	id 'io.spring.dependency-management' version '1.1.5'
+	id 'application'
 }
 
 group = 'com.fabio'
@@ -22,22 +23,24 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	// https://mvnrepository.com/artifact/org.glassfish.tyrus/tyrus-client
 	implementation group: 'org.glassfish.tyrus', name: 'tyrus-client', version: '2.2.0-M1'
-	// https://mvnrepository.com/artifact/org.glassfish.tyrus/tyrus-server
 	implementation group: 'org.glassfish.tyrus', name: 'tyrus-server', version: '2.2.0-M1'
-	// https://mvnrepository.com/artifact/org.glassfish.tyrus/tyrus-container-grizzly-server
 	testImplementation group: 'org.glassfish.tyrus', name: 'tyrus-container-grizzly-server', version: '2.2.0-M1'
-
 }
 
 application {
-	mainClass = 'com.fabio.chatapp.server.ChatServerMain'
+	mainClass = 'com.fabio.chatapp.ChatappApplication'
 }
 
-task(runClient, dependsOn: 'classes', type: JavaExec) {
-	main = 'com.fabio.chatapp.client.ChatClient'
+bootRun {
+	mainClass = 'com.fabio.chatapp.ChatappApplication'
+}
+
+task runClient(type: JavaExec) {
 	classpath = sourceSets.main.runtimeClasspath
+	mainClass = 'com.fabio.chatapp.client.ChatClient'
+	standardInput = System.in
+}
 
 tasks.named('test') {
 	useJUnitPlatform()
