@@ -7,7 +7,7 @@ A simple chat application using WebSockets with Spring Boot server and Java clie
 - Java 17 or higher
 - Gradle 8.8 or higher
 
-## unning the Application
+## Running the Application
 
 1. Clone the repository:
 2. Build the project:
