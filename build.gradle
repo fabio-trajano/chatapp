@@ -31,6 +31,14 @@ dependencies {
 
 }
 
+application {
+	mainClass = 'com.fabio.chatapp.server.ChatServerMain'
+}
+
+task(runClient, dependsOn: 'classes', type: JavaExec) {
+	main = 'com.fabio.chatapp.client.ChatClient'
+	classpath = sourceSets.main.runtimeClasspath
+
 tasks.named('test') {
 	useJUnitPlatform()
 }

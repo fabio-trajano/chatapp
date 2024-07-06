@@ -1,7 +1,6 @@
 package com.fabio.chatapp.client;
 
 import jakarta.websocket.*;
-
 import java.net.URI;
 import java.util.Scanner;
 
@@ -33,7 +32,7 @@ public class ChatClient {
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             ChatClient client = new ChatClient();
-            container.connectToServer(client, new URI("ws://localhost:8025/websockets/chat"));
+            container.connectToServer(client, new URI("ws://localhost:8080/chat"));
 
             Scanner scanner = new Scanner(System.in);
             String message;
